@@ -12,3 +12,8 @@ export interface Coin {
     vwap24Hr: string
     explorer: string
 }
+export interface GetCoinsMarketParams {
+    offset?: number
+    limit?: number
+    search?: string
+}

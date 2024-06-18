@@ -13,6 +13,8 @@
         "noEmit": true,
         "jsx": "react-jsx",
 
+        "noImplicitAny": true,
+        "strictNullChecks": true,
         "strict": true,
         "noUnusedLocals": true,
         "noUnusedParameters": true,

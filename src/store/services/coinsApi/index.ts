@@ -1,15 +1,16 @@
+import { COIN_ROWS_AMOUNT } from '@constants/films'
 import { api } from '../api'
-import { Coin } from './interfaces'
+import { Coin, GetCoinsMarketParams } from './interfaces'
 
 export const coinsApi = api.injectEndpoints({
     endpoints: (builder) => ({
-        getCoinsMarket: builder.query<Coin[], void>({
-            query: () => ({
-                url: `assets?limit=30&offset=${0}`,
+        getCoinsMarket: builder.query<Coin[], GetCoinsMarketParams>({
+            query: ({ offset = 0, limit = COIN_ROWS_AMOUNT, search }) => ({
+                url: `assets?limit=${limit}&offset=${offset}${search ? `&search=${search}` : ''}`,
             }),
             transformResponse: (response: { data: Coin[] }) => response.data,
         }),
     }),
 })
 
-export const { useGetCoinsMarketQuery } = coinsApi
+export const { useGetCoinsMarketQuery, useLazyGetCoinsMarketQuery } = coinsApi
