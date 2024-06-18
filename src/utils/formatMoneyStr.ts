@@ -1,6 +1,6 @@
-export const formatMoneyStr = (money: string) => {
-    const moneyNum = Number(money)
-    const fixedNum = Number(moneyNum.toFixed(2))
+export const formatMoneyStr = (money = '') => {
+    const moneyNum = Number(money);
+    const fixedNum = Number(moneyNum.toFixed(2));
 
-    return fixedNum.toLocaleString()
-}
+    return fixedNum.toLocaleString();
+};

@@ -1,69 +1,80 @@
-import { useColumnSearch } from '@hooks/useColumnSearch'
-import { useLazyGetCoinsMarketQuery } from '@store/services/coinsApi'
-import { Coin } from '@store/services/coinsApi/interfaces'
-import { formatMoneyStr } from '@utils/formatMoneyStr'
-import { sortObjNumValues } from '@utils/sortObjNumValues'
-import { Space, Table, Image, TablePaginationConfig } from 'antd'
-import Column from 'antd/es/table/Column'
-import './index.css'
-import { useEffect, useState } from 'react'
-import { COIN_ROWS_AMOUNT, MAXIMUM_ROWS_AMOUNT } from '@constants/films'
-import { SymbolColumn } from '@components/SymbolColumn'
-import { NumberColumn } from '@components/NumberColumn'
-import { SearchOutlined } from '@ant-design/icons'
-import { FilterDropdown } from '@components/FilterDropdown'
+import { useLazyGetCoinsMarketQuery } from '@store/services/coinsApi';
+import { Coin } from '@store/services/coinsApi/interfaces';
+import { sortObjNumValues } from '@utils/sortObjNumValues';
+import { Table, TablePaginationConfig } from 'antd';
+import Column from 'antd/es/table/Column';
+import './index.css';
+import { useEffect, useState } from 'react';
+import { COIN_ROWS_AMOUNT, MAXIMUM_ROWS_AMOUNT } from '@constants/coins';
+import { SymbolColumn } from '@components/SymbolColumn';
+import { NumberColumn } from '@components/NumberColumn';
+import { SearchOutlined } from '@ant-design/icons';
+import { FilterDropdown } from '@components/FilterDropdown';
+import { useNavigate } from 'react-router-dom';
+import { PATHS_LINKS } from '@constants/paths';
+import { useSorter } from '@hooks/useSorter';
 
 export const CoinsTable = () => {
+    // const [sortedInfo, setSortedInfo] = useState({})
     const [paginationParams, setPaginationParams] =
         useState<TablePaginationConfig>({
             defaultPageSize: COIN_ROWS_AMOUNT,
             total: MAXIMUM_ROWS_AMOUNT,
-        })
-    const [sortedInfo, setSortedInfo] = useState({})
-    const [getCoins, { data: coins }] = useLazyGetCoinsMarketQuery()
-    const searchByName = useColumnSearch<Coin>('name')
+        });
+
+    const [getCoins, { data: coins }] = useLazyGetCoinsMarketQuery();
+    const navigate = useNavigate();
+
+    const { sortedInfo, setSortedInfo, getSorterOptions } = useSorter<Coin>();
 
     useEffect(() => {
-        getCoins({})
-    }, [])
+        getCoins({});
+    }, []);
 
     useEffect(() => {
         if (coins && coins.length < COIN_ROWS_AMOUNT)
             setPaginationParams((prev) => ({
                 ...prev,
                 total: prev?.current * prev?.pageSize,
-            }))
+            }));
         else
             setPaginationParams((prev) => ({
                 ...prev,
                 total: MAXIMUM_ROWS_AMOUNT,
-            }))
-    }, [coins])
+            }));
+    }, [coins]);
 
     const handleChange = (
         pagination: TablePaginationConfig,
         filters,
         sorter
     ) => {
-        const { current = 1, pageSize = 1 } = pagination
+        const { current = 1, pageSize = 1 } = pagination;
         const searchString =
-            filters && Object.values(filters)[0] && Object.values(filters)[0][0]
+            filters &&
+            Object.values(filters)[0] &&
+            Object.values(filters)[0][0];
 
-        getCoins({
-            offset: (current - 1) * pageSize,
-            limit: pageSize,
-            search: searchString,
-        })
+        // getCoins({
+        //     offset: (current - 1) * pageSize,
+        //     limit: pageSize,
+        //     search: searchString,
+        // });
 
-        setPaginationParams(pagination)
-        setSortedInfo(sorter)
-    }
+        setPaginationParams(pagination);
+        setSortedInfo(sorter);
+    };
 
     return (
         <Table<Coin>
             dataSource={coins}
             pagination={paginationParams}
             onChange={handleChange}
+            onRow={(record) => ({
+                onClick: () => {
+                    navigate(`${PATHS_LINKS.coin}/${record.id}`);
+                },
+            })}
         >
             <Column<Coin> dataIndex="rank" key="rank" />
             <Column<Coin>
@@ -97,13 +108,8 @@ export const CoinsTable = () => {
                 title="Price"
                 dataIndex="priceUsd"
                 key="priceUsd"
-                sorter={sortObjNumValues<Coin>('priceUsd')}
                 render={(price) => <NumberColumn number={price} addon="$" />}
-                sortOrder={
-                    sortedInfo.columnKey === 'priceUsd'
-                        ? sortedInfo.order
-                        : null
-                }
+                {...getSorterOptions('priceUsd')}
             />
             <Column<Coin>
                 title="24h %"
@@ -112,12 +118,7 @@ export const CoinsTable = () => {
                 render={(percents) => (
                     <NumberColumn number={percents} addon="%" />
                 )}
-                sorter={sortObjNumValues<Coin>('changePercent24Hr')}
-                sortOrder={
-                    sortedInfo.columnKey === 'changePercent24Hr'
-                        ? sortedInfo.order
-                        : null
-                }
+                {...getSorterOptions('changePercent24Hr')}
             />
             <Column<Coin>
                 title="Marcet cap"
@@ -126,14 +127,9 @@ export const CoinsTable = () => {
                 render={(marketCapUsd) => (
                     <NumberColumn number={marketCapUsd} addon="$" />
                 )}
-                sorter={sortObjNumValues<Coin>('marketCapUsd')}
-                sortOrder={
-                    sortedInfo.columnKey === 'marketCapUsd'
-                        ? sortedInfo.order
-                        : null
-                }
+                {...getSorterOptions('marketCapUsd')}
             />
             <Column key="action" render={() => <a>Add</a>} />
         </Table>
-    )
-}
+    );
+};
