@@ -3,7 +3,6 @@ import { Coin } from '@store/services/coinsApi/interfaces';
 import { sortObjNumValues } from '@utils/sortObjNumValues';
 import { PaginationProps, Table, TablePaginationConfig } from 'antd';
 import Column from 'antd/es/table/Column';
-import './index.css';
 import { useCallback, useEffect, useState } from 'react';
 import { COIN_ROWS_AMOUNT, MAXIMUM_ROWS_AMOUNT } from '@constants/coins';
 import { SymbolColumn } from '@components/SymbolColumn';

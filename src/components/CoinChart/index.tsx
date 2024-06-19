@@ -60,7 +60,7 @@ export const CoinChart = ({ id }) => {
         datasets: [
             {
                 type: 'line' as const,
-                label: 'Dataset 1',
+                label: 'Opening price',
                 borderColor: 'rgb(255, 99, 132)',
                 borderWidth: 2,
                 data: history?.map(() => history[0]?.priceUsd),
@@ -69,7 +69,7 @@ export const CoinChart = ({ id }) => {
             },
             {
                 type: 'bar' as const,
-                label: 'Dataset 2',
+                label: 'Price',
                 backgroundColor: 'rgb(75, 192, 192)',
                 data: coinNumbers,
                 borderColor: 'white',

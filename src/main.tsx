@@ -1,13 +1,12 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Layout } from '@shared/Layout';
-import { PATHS_LINKS } from '@constants/paths';
-import { lazy, StrictMode, Suspense } from 'react';
+import { StrictMode, Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { store } from './store';
-import { CoinPage } from '@pages/CoinPage';
-
-const MainPage = lazy(() => import('@pages/MainPage'));
+import { ConfigProvider } from 'antd';
+import { theme } from '@constants/theme';
+import { PATHS } from '@constants/paths';
 
 const router = createBrowserRouter([
     {
@@ -16,20 +15,16 @@ const router = createBrowserRouter([
                 <Layout />
             </Suspense>
         ),
-        children: [
-            { path: PATHS_LINKS.main, element: <MainPage /> },
-            {
-                path: PATHS_LINKS.coin + '/:id',
-                element: <CoinPage />,
-            },
-        ],
+        children: PATHS,
     },
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <StrictMode>
-        <Provider store={store}>
-            <RouterProvider router={router} />
-        </Provider>
+        <ConfigProvider theme={theme}>
+            <Provider store={store}>
+                <RouterProvider router={router} />
+            </Provider>
+        </ConfigProvider>
     </StrictMode>
 );

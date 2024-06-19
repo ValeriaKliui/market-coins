@@ -1,7 +1,7 @@
 import { CoinInfo } from '@components/CoinInfo';
 import { useParams } from 'react-router-dom';
 
-export const CoinPage = () => {
+const CoinPage = () => {
     const coin = useParams().id || '';
 
     return (
@@ -10,3 +10,5 @@ export const CoinPage = () => {
         </>
     );
 };
+
+export default CoinPage;
