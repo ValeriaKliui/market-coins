@@ -8,8 +8,16 @@ import { CoinChart } from '@components/CoinChart';
 export const CoinInfo: FC<CoinInfoProps> = ({ coin }) => {
     const { data: coinInfo } = useGetCoinInfoQuery({ coin });
 
-    const { symbol, name, rank, priceUsd, supply, marketCapUsd, maxSupply } =
-        coinInfo ?? {};
+    const {
+        symbol,
+        name,
+        rank,
+        priceUsd,
+        supply,
+        marketCapUsd,
+        maxSupply,
+        id,
+    } = coinInfo ?? {};
 
     return (
         <>
@@ -25,7 +33,7 @@ export const CoinInfo: FC<CoinInfoProps> = ({ coin }) => {
                 maxSupply={maxSupply}
                 symbol={symbol}
             />
-            <CoinChart name={name} />
+            <CoinChart id={id} />
         </>
     );
 };

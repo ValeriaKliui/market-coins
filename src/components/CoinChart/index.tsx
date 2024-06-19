@@ -18,6 +18,7 @@ import {
 import { fromTmstpToTime } from '@utils/fromTmstpToTime';
 import { fromTmstpToDate } from '@utils/fromTmstpToDate';
 import { useEffect } from 'react';
+import { Alert, Spin } from 'antd';
 
 ChartJS.register(
     LinearScale,
@@ -31,19 +32,20 @@ ChartJS.register(
     BarController
 );
 
-export const CoinChart = ({ name }) => {
-    const [getCoinHistory, { data: history }] = useLazyGetCoinHistoryQuery();
+export const CoinChart = ({ id }) => {
+    const [getCoinHistory, { data: history = [], isFetching }] =
+        useLazyGetCoinHistoryQuery();
 
     useEffect(() => {
         const timestampNow = Date.now();
-        if (name)
+        if (id)
             getCoinHistory({
-                name: name?.toLowerCase(),
+                id,
                 interval: 'm1',
                 start: timestampNow - 3600 * 1000,
                 end: timestampNow,
             });
-    }, [name]);
+    }, [id]);
 
     const timestamps = history?.map(({ time }) => time);
     const timestampsData = timestamps?.map(
@@ -51,7 +53,7 @@ export const CoinChart = ({ name }) => {
             `${fromTmstpToDate(timestamp)} ${fromTmstpToTime(timestamp)}`
     );
 
-    console.log(history?.map(({ priceUsd }) => Math.round(priceUsd)));
+    const coinNumbers = history?.map(({ priceUsd }) => Number(priceUsd));
 
     const data = {
         labels: timestampsData,
@@ -61,7 +63,7 @@ export const CoinChart = ({ name }) => {
                 label: 'Dataset 1',
                 borderColor: 'rgb(255, 99, 132)',
                 borderWidth: 2,
-                data: history?.map(() => Math.round(history[0]?.priceUsd)),
+                data: history?.map(() => history[0]?.priceUsd),
                 pointBackgroundColor: 'rgba(0, 0, 0, 0)',
                 pointBorderColor: 'rgba(0, 0, 0, 0)',
             },
@@ -69,12 +71,41 @@ export const CoinChart = ({ name }) => {
                 type: 'bar' as const,
                 label: 'Dataset 2',
                 backgroundColor: 'rgb(75, 192, 192)',
-                data: history?.map(({ priceUsd }) => Math.round(priceUsd)),
+                data: coinNumbers,
                 borderColor: 'white',
                 borderWidth: 2,
             },
         ],
     };
 
-    return <Chart type="bar" data={data} />;
+    const minValueInHistory = Math.min(...coinNumbers);
+    const minValueInChart = (1 - 0.001) * minValueInHistory;
+    const maxValueInHistory = Math.max(...coinNumbers);
+    const maxValueInChart = (1 + 0.001) * maxValueInHistory;
+
+    if (isFetching)
+        return (
+            <Spin tip="Loading...">
+                <Alert
+                    message="Coin history is loading"
+                    description="Please, wait."
+                />
+            </Spin>
+        );
+
+    return (
+        <Chart
+            type="bar"
+            data={data}
+            options={{
+                responsive: true,
+                scales: {
+                    y: {
+                        min: minValueInChart,
+                        max: maxValueInChart,
+                    },
+                },
+            }}
+        />
+    );
 };

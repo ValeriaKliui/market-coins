@@ -21,8 +21,8 @@ export const coinsApi = api.injectEndpoints({
             transformResponse: (response: { data: Coin }) => response.data,
         }),
         getCoinHistory: builder.query<CoinHistory[], GetCoinHistoryParams>({
-            query: ({ name, interval, start, end }) => ({
-                url: `assets/${name}/history?interval=${interval}&start=${start}&end=${end}`,
+            query: ({ id, interval, start, end }) => ({
+                url: `assets/${id}/history?interval=${interval}&start=${start}&end=${end}`,
             }),
             transformResponse: (response: { data: CoinHistory[] }) =>
                 response.data,
