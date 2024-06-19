@@ -3,6 +3,7 @@ import { CoinNumbers } from '@components/CoinNumbers';
 import { useGetCoinInfoQuery } from '@store/services/coinsApi';
 import { FC } from 'react';
 import { CoinInfoProps } from './interfaces';
+import { CoinChart } from '@components/CoinChart';
 
 export const CoinInfo: FC<CoinInfoProps> = ({ coin }) => {
     const { data: coinInfo } = useGetCoinInfoQuery({ coin });
@@ -22,7 +23,9 @@ export const CoinInfo: FC<CoinInfoProps> = ({ coin }) => {
                 supply={supply}
                 marketCapUsd={marketCapUsd}
                 maxSupply={maxSupply}
+                symbol={symbol}
             />
+            <CoinChart name={name} />
         </>
     );
 };

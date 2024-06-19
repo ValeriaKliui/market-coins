@@ -1,10 +1,10 @@
 import { useLazyGetCoinsMarketQuery } from '@store/services/coinsApi';
 import { Coin } from '@store/services/coinsApi/interfaces';
 import { sortObjNumValues } from '@utils/sortObjNumValues';
-import { Table, TablePaginationConfig } from 'antd';
+import { PaginationProps, Table, TablePaginationConfig } from 'antd';
 import Column from 'antd/es/table/Column';
 import './index.css';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { COIN_ROWS_AMOUNT, MAXIMUM_ROWS_AMOUNT } from '@constants/coins';
 import { SymbolColumn } from '@components/SymbolColumn';
 import { NumberColumn } from '@components/NumberColumn';
@@ -15,15 +15,22 @@ import { PATHS_LINKS } from '@constants/paths';
 import { useSorter } from '@hooks/useSorter';
 
 export const CoinsTable = () => {
-    // const [sortedInfo, setSortedInfo] = useState({})
-    const [paginationParams, setPaginationParams] =
-        useState<TablePaginationConfig>({
-            defaultPageSize: COIN_ROWS_AMOUNT,
+    const [filtersInfo, setFiltersInfo] = useState({});
+    const [paginationInfo, setPaginationInfo] = useState<TablePaginationConfig>(
+        {
+            pageSize: COIN_ROWS_AMOUNT,
             total: MAXIMUM_ROWS_AMOUNT,
-        });
+            current: 1,
+        }
+    );
 
     const [getCoins, { data: coins }] = useLazyGetCoinsMarketQuery();
     const navigate = useNavigate();
+
+    const searchString =
+        filtersInfo &&
+        Object.values(filtersInfo)[0] &&
+        Object.values(filtersInfo)[0][0];
 
     const { sortedInfo, setSortedInfo, getSorterOptions } = useSorter<Coin>();
 
@@ -31,44 +38,42 @@ export const CoinsTable = () => {
         getCoins({});
     }, []);
 
-    useEffect(() => {
-        if (coins && coins.length < COIN_ROWS_AMOUNT)
-            setPaginationParams((prev) => ({
-                ...prev,
-                total: prev?.current * prev?.pageSize,
-            }));
-        else
-            setPaginationParams((prev) => ({
-                ...prev,
-                total: MAXIMUM_ROWS_AMOUNT,
-            }));
-    }, [coins]);
-
     const handleChange = (
         pagination: TablePaginationConfig,
         filters,
         sorter
     ) => {
-        const { current = 1, pageSize = 1 } = pagination;
-        const searchString =
-            filters &&
-            Object.values(filters)[0] &&
-            Object.values(filters)[0][0];
+        // setFiltersInfo(filters);
+        setPaginationInfo(pagination);
+        setSortedInfo(sorter);
+    };
 
+    const onPageChange = (page: number, pageSize: number) => {
+        getCoins({
+            offset: (page - 1) * pageSize,
+            limit: pageSize,
+            search: searchString,
+        });
+    };
+
+    const onSearch = (searchString) => {
+        // // console.log(searchString, paginationInfo);
+        // const { pageSize, current } = paginationInfo;
+        // // setFiltersInfo((prev) => ({ ...prev, search: searchString }));
         // getCoins({
         //     offset: (current - 1) * pageSize,
         //     limit: pageSize,
         //     search: searchString,
         // });
-
-        setPaginationParams(pagination);
-        setSortedInfo(sorter);
     };
 
     return (
         <Table<Coin>
             dataSource={coins}
-            pagination={paginationParams}
+            pagination={{
+                ...paginationInfo,
+                onChange: onPageChange,
+            }}
             onChange={handleChange}
             onRow={(record) => ({
                 onClick: () => {
@@ -82,7 +87,7 @@ export const CoinsTable = () => {
                 dataIndex="name"
                 key="name"
                 filterDropdown={(filterProps) => (
-                    <FilterDropdown {...filterProps} />
+                    <FilterDropdown onSearch={onSearch} {...filterProps} />
                 )}
                 filterIcon={(filtered: boolean) => (
                     <SearchOutlined
@@ -108,7 +113,9 @@ export const CoinsTable = () => {
                 title="Price"
                 dataIndex="priceUsd"
                 key="priceUsd"
-                render={(price) => <NumberColumn number={price} addon="$" />}
+                render={(price) => (
+                    <NumberColumn number={price} currency="USD" />
+                )}
                 {...getSorterOptions('priceUsd')}
             />
             <Column<Coin>
@@ -125,7 +132,7 @@ export const CoinsTable = () => {
                 dataIndex="marketCapUsd"
                 key="marketCapUsd"
                 render={(marketCapUsd) => (
-                    <NumberColumn number={marketCapUsd} addon="$" />
+                    <NumberColumn number={marketCapUsd} currency="USD" />
                 )}
                 {...getSorterOptions('marketCapUsd')}
             />

@@ -1,7 +1,7 @@
-import { SearchOutlined } from '@ant-design/icons'
-import { Button, Input, Space } from 'antd'
-import { FilterDropdownProps } from 'antd/es/table/interface'
-import { FC, useRef, useState } from 'react'
+import { SearchOutlined } from '@ant-design/icons';
+import { Button, Input, Space } from 'antd';
+import { FilterDropdownProps } from 'antd/es/table/interface';
+import { FC, useRef, useState } from 'react';
 
 export const FilterDropdown: FC<FilterDropdownProps> = ({
     setSelectedKeys,
@@ -9,15 +9,16 @@ export const FilterDropdown: FC<FilterDropdownProps> = ({
     confirm,
     clearFilters,
     close,
+    onSearch,
 }) => {
-    const searchInput = useRef<HTMLInputElement>(null)
-    const searchKey = ''
-    const handleSearch = (selectedKeys, confirm, dataIndex) => {
-        confirm()
-    }
+    const searchInput = useRef<HTMLInputElement>(null);
+    const searchKey = '';
+    const handleSearch = (selectedKeys, confirm, searchKey) => {
+        confirm();
+    };
     const handleReset = (clearFilters) => {
-        clearFilters()
-    }
+        clearFilters();
+    };
 
     return (
         <div
@@ -68,12 +69,12 @@ export const FilterDropdown: FC<FilterDropdownProps> = ({
                     type="link"
                     size="small"
                     onClick={() => {
-                        close()
+                        close();
                     }}
                 >
                     close
                 </Button>
             </Space>
         </div>
-    )
-}
+    );
+};

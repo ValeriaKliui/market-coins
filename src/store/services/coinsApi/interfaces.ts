@@ -1,16 +1,16 @@
 export interface Coin {
     id: string;
     rank: string;
-    symbol: string;
-    name: string;
-    supply: string;
-    maxSupply: string;
-    marketCapUsd: string;
-    volumeUsd24Hr: string;
-    priceUsd: string;
-    changePercent24Hr: string;
-    vwap24Hr: string;
-    explorer: string;
+    symbol: string | null;
+    name: string | null;
+    supply: string | null;
+    maxSupply: string | null;
+    marketCapUsd: string | null;
+    volumeUsd24Hr: string | null;
+    priceUsd: string | null;
+    changePercent24Hr: string | null;
+    vwap24Hr: string | null;
+    explorer: string | null;
 }
 export interface GetCoinsMarketParams {
     offset?: number;
@@ -19,4 +19,14 @@ export interface GetCoinsMarketParams {
 }
 export interface GetCoinInfoParams {
     coin: string;
+}
+export interface GetCoinHistoryParams {
+    name: string;
+    interval: 'm1' | 'm5' | 'm15' | 'm30' | 'h1' | 'h2' | 'h6' | 'h12' | 'd1';
+    start: number;
+    end: number;
+}
+export interface CoinHistory {
+    priceUsd: string;
+    time: number;
 }

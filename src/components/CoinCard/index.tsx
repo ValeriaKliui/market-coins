@@ -11,6 +11,8 @@ export const CoinCard: FC<CoinCardProps> = ({
     rank,
     priceUsd,
 }) => {
+    const formattedPriceUsd = formatMoneyStr(priceUsd, 'USD');
+
     return (
         <Card
             title={
@@ -23,7 +25,9 @@ export const CoinCard: FC<CoinCardProps> = ({
             }
             bordered={false}
         >
-            <Meta title={`Price: $${formatMoneyStr(priceUsd)}`} />
+            {formattedPriceUsd && (
+                <Meta title={`Price: ${formattedPriceUsd}`} />
+            )}
         </Card>
     );
 };

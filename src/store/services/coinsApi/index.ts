@@ -1,6 +1,12 @@
 import { COIN_ROWS_AMOUNT } from '@constants/coins';
 import { api } from '../api';
-import { Coin, GetCoinInfoParams, GetCoinsMarketParams } from './interfaces';
+import {
+    Coin,
+    GetCoinInfoParams,
+    GetCoinsMarketParams,
+    GetCoinHistoryParams,
+    CoinHistory,
+} from './interfaces';
 
 export const coinsApi = api.injectEndpoints({
     endpoints: (builder) => ({
@@ -14,6 +20,13 @@ export const coinsApi = api.injectEndpoints({
             query: ({ coin }) => ({ url: `assets/${coin}` }),
             transformResponse: (response: { data: Coin }) => response.data,
         }),
+        getCoinHistory: builder.query<CoinHistory[], GetCoinHistoryParams>({
+            query: ({ name, interval, start, end }) => ({
+                url: `assets/${name}/history?interval=${interval}&start=${start}&end=${end}`,
+            }),
+            transformResponse: (response: { data: CoinHistory[] }) =>
+                response.data,
+        }),
     }),
 });
 
@@ -21,4 +34,6 @@ export const {
     useGetCoinsMarketQuery,
     useLazyGetCoinsMarketQuery,
     useGetCoinInfoQuery,
+    useGetCoinHistoryQuery,
+    useLazyGetCoinHistoryQuery,
 } = coinsApi;

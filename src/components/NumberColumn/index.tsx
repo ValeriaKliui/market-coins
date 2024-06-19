@@ -1,16 +1,15 @@
-import { formatMoneyStr } from '@utils/formatMoneyStr'
+import { formatMoneyStr } from '@utils/formatMoneyStr';
 
-export const NumberColumn = ({ number, addon }) => {
-    const roundedNumberStr = formatMoneyStr(number)
+export const NumberColumn = ({ number, currency, addon }) => {
+    const roundedNumberStr = formatMoneyStr(number, currency);
 
-    if (roundedNumberStr === '0') return <></>
+    if (roundedNumberStr === '0') return <></>;
 
     return (
         <>
             <p>
-                {roundedNumberStr}
-                {addon}
+                {roundedNumberStr} {roundedNumberStr && addon}
             </p>
         </>
-    )
-}
+    );
+};

@@ -1,26 +1,42 @@
 import { FC } from 'react';
 import { CoinNumbersProps } from './interfaces';
-import { Descriptions } from 'antd';
+import { Button, Descriptions } from 'antd';
 import DescriptionsItem from 'antd/es/descriptions/Item';
+import { formatMoneyStr } from '@utils/formatMoneyStr';
+import { useNavigate } from 'react-router-dom';
 
 export const CoinNumbers: FC<CoinNumbersProps> = ({
     supply,
     maxSupply,
     marketCapUsd,
+    symbol,
 }) => {
-    let formatter = Intl.NumberFormat('en', {
-        notation: 'compact',
-        maximumFractionDigits: 2,
-    });
+    const navigate = useNavigate();
+    const supplyCurr = formatMoneyStr(supply);
+    const maxSupplyCurr = formatMoneyStr(maxSupply);
+    const marketCapUsdCurr = formatMoneyStr(marketCapUsd, 'USD');
+    const returnToPrevPage = () => navigate(-1);
 
-    console.log(formatter.format(supply));
     return (
-        <Descriptions column={2}>
-            <DescriptionsItem label="Supply">{supply}</DescriptionsItem>
-            <DescriptionsItem label="Max Supply">{maxSupply}</DescriptionsItem>
-            <DescriptionsItem label="Market Cap" span={2}>
-                {marketCapUsd}
-            </DescriptionsItem>
-        </Descriptions>
+        <>
+            <Button onClick={returnToPrevPage}>Go back</Button>
+            <Descriptions column={2}>
+                {supply && (
+                    <DescriptionsItem label="Supply">
+                        {supplyCurr} {symbol}
+                    </DescriptionsItem>
+                )}{' '}
+                {maxSupply && (
+                    <DescriptionsItem label="Max Supply">
+                        {maxSupplyCurr} {symbol}
+                    </DescriptionsItem>
+                )}
+                {marketCapUsd && (
+                    <DescriptionsItem label="Market Cap">
+                        {marketCapUsdCurr}
+                    </DescriptionsItem>
+                )}
+            </Descriptions>
+        </>
     );
 };
