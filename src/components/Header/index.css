@@ -1,0 +1,4 @@
+header.ant-layout-header {
+    display: flex;
+    align-items: flex-end;
+}
