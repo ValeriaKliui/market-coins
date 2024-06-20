@@ -11,14 +11,15 @@ import {
     BarController,
 } from 'chart.js';
 import { Chart } from 'react-chartjs-2';
-import {
-    useGetCoinHistoryQuery,
-    useLazyGetCoinHistoryQuery,
-} from '@store/services/coinsApi';
 import { fromTmstpToTime } from '@utils/fromTmstpToTime';
 import { fromTmstpToDate } from '@utils/fromTmstpToDate';
-import { useEffect } from 'react';
 import { Alert, Spin } from 'antd';
+import './index.css';
+import { FC } from 'react';
+import { CoinChartProps } from './interfaces';
+import { getChartOptions } from '@utils/getChartOptions';
+import { getChartData } from '@utils/getChartData';
+import { getCoinNumbers } from '@utils/getCoinNumbers';
 
 ChartJS.register(
     LinearScale,
@@ -32,56 +33,12 @@ ChartJS.register(
     BarController
 );
 
-export const CoinChart = ({ id }) => {
-    const [getCoinHistory, { data: history = [], isFetching }] =
-        useLazyGetCoinHistoryQuery();
+export const CoinChart: FC<CoinChartProps> = ({ history, isFetching }) => {
+    const coinNumbers = getCoinNumbers(history);
+    const openingPrice = history[0];
+    const openingPriceLabel = 'Opening price';
 
-    useEffect(() => {
-        const timestampNow = Date.now();
-        if (id)
-            getCoinHistory({
-                id,
-                interval: 'm1',
-                start: timestampNow - 3600 * 1000,
-                end: timestampNow,
-            });
-    }, [id]);
-
-    const timestamps = history?.map(({ time }) => time);
-    const timestampsData = timestamps?.map(
-        (timestamp) =>
-            `${fromTmstpToDate(timestamp)} ${fromTmstpToTime(timestamp)}`
-    );
-
-    const coinNumbers = history?.map(({ priceUsd }) => Number(priceUsd));
-
-    const data = {
-        labels: timestampsData,
-        datasets: [
-            {
-                type: 'line' as const,
-                label: 'Opening price',
-                borderColor: 'rgb(255, 99, 132)',
-                borderWidth: 2,
-                data: history?.map(() => history[0]?.priceUsd),
-                pointBackgroundColor: 'rgba(0, 0, 0, 0)',
-                pointBorderColor: 'rgba(0, 0, 0, 0)',
-            },
-            {
-                type: 'bar' as const,
-                label: 'Price',
-                backgroundColor: 'rgb(75, 192, 192)',
-                data: coinNumbers,
-                borderColor: 'white',
-                borderWidth: 2,
-            },
-        ],
-    };
-
-    const minValueInHistory = Math.min(...coinNumbers);
-    const minValueInChart = (1 - 0.001) * minValueInHistory;
-    const maxValueInHistory = Math.max(...coinNumbers);
-    const maxValueInChart = (1 + 0.001) * maxValueInHistory;
+    const chartData = getChartData(history, openingPriceLabel);
 
     if (isFetching)
         return (
@@ -96,16 +53,12 @@ export const CoinChart = ({ id }) => {
     return (
         <Chart
             type="bar"
-            data={data}
-            options={{
-                responsive: true,
-                scales: {
-                    y: {
-                        min: minValueInChart,
-                        max: maxValueInChart,
-                    },
-                },
-            }}
+            data={chartData}
+            options={getChartOptions(
+                coinNumbers,
+                openingPrice,
+                openingPriceLabel
+            )}
         />
     );
 };

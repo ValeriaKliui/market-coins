@@ -17,9 +17,15 @@ export interface GetCoinsMarketParams {
     limit?: number;
     search?: string;
 }
-export interface GetCoinInfoParams {
-    coin: string;
+export interface GetCoinInfoParams extends Pick<Coin, 'id'> {}
+
+export enum HistoryPeriod {
+    '1 hour' = 'm1',
+    '12 hours' = 'h1',
+    '24 hours' = 'h2',
 }
+export type HistoryPeriodValues = `${HistoryPeriod}`;
+
 export interface GetCoinHistoryParams {
     id: string;
     interval: 'm1' | 'm5' | 'm15' | 'm30' | 'h1' | 'h2' | 'h6' | 'h12' | 'd1';

@@ -4,14 +4,14 @@ import { StrictMode, Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { store } from './store';
-import { ConfigProvider } from 'antd';
+import { ConfigProvider, Spin } from 'antd';
 import { theme } from '@constants/theme';
 import { PATHS } from '@constants/paths';
 
 const router = createBrowserRouter([
     {
         element: (
-            <Suspense fallback={<div>loading</div>}>
+            <Suspense fallback={<Spin />}>
                 <Layout />
             </Suspense>
         ),

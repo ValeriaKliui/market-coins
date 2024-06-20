@@ -1,7 +1,7 @@
 import { SearchOutlined } from '@ant-design/icons';
 import { Button, Input, Space } from 'antd';
 import { FilterDropdownProps } from 'antd/es/table/interface';
-import { FC, useRef, useState } from 'react';
+import { FC, useRef } from 'react';
 
 export const FilterDropdown: FC<FilterDropdownProps> = ({
     setSelectedKeys,
@@ -9,7 +9,6 @@ export const FilterDropdown: FC<FilterDropdownProps> = ({
     confirm,
     clearFilters,
     close,
-    onSearch,
 }) => {
     const searchInput = useRef<HTMLInputElement>(null);
     const searchKey = '';
