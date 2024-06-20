@@ -1,5 +1,6 @@
 import { COIN_ROWS_AMOUNT } from '@constants/coins';
 import { api } from '../api';
+import queryString from 'query-string';
 import {
     Coin,
     GetCoinInfoParams,
@@ -11,8 +12,8 @@ import {
 export const coinsApi = api.injectEndpoints({
     endpoints: (builder) => ({
         getCoinsMarket: builder.query<Coin[], GetCoinsMarketParams>({
-            query: ({ offset = 0, limit = COIN_ROWS_AMOUNT, search }) => ({
-                url: `assets?limit=${limit}&offset=${offset}${search ? `&search=${search}` : ''}`,
+            query: (queryParams) => ({
+                url: `assets?${queryString.stringify(queryParams, { skipNull: true, skipEmptyString: true })}`,
             }),
             transformResponse: (response: { data: Coin[] }) => response.data,
         }),

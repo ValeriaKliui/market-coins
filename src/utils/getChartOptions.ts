@@ -11,7 +11,6 @@ export const getChartOptions = (
     const formattedNums = coinNumbers.map((str) => Number(str));
 
     const minValueInHistory = Math.min(...formattedNums);
-    console.log(coinNumbers, minValueInHistory);
     const minValueInChart = (1 - 0.001) * minValueInHistory;
     const maxValueInHistory = Math.max(...formattedNums);
     const maxValueInChart = (1 + 0.001) * maxValueInHistory;
