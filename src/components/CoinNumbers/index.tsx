@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { CoinNumbersProps } from './interfaces';
 import { Descriptions } from 'antd';
 import DescriptionsItem from 'antd/es/descriptions/Item';
-import { formatMoneyStr } from '@utils/formatMoneyStr';
+import { formatNumberStr } from '@utils/formatNumberStr';
 
 export const CoinNumbers: FC<CoinNumbersProps> = ({
     supply,
@@ -10,9 +10,9 @@ export const CoinNumbers: FC<CoinNumbersProps> = ({
     marketCapUsd,
     symbol,
 }) => {
-    const supplyCurr = formatMoneyStr(supply);
-    const maxSupplyCurr = formatMoneyStr(maxSupply);
-    const marketCapUsdCurr = formatMoneyStr(marketCapUsd, 'USD');
+    const supplyCurr = formatNumberStr(supply);
+    const maxSupplyCurr = formatNumberStr(maxSupply);
+    const marketCapUsdCurr = formatNumberStr(marketCapUsd, 'USD');
 
     return (
         <>

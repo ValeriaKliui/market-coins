@@ -1,7 +1,7 @@
-import { formatMoneyStr } from '@utils/formatMoneyStr';
+import { formatNumberStr } from '@utils/formatNumberStr';
 
 export const NumberColumn = ({ number, currency, addon }) => {
-    const roundedNumberStr = formatMoneyStr(number, currency);
+    const roundedNumberStr = formatNumberStr(number, currency);
 
     if (roundedNumberStr === '0') return <></>;
 

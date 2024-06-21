@@ -78,6 +78,11 @@ export const CoinsTable = () => {
         setChoosenCurrency(coin);
     };
 
+    const onCancel = () => {
+        setChoosenCurrency(null);
+        handleCancel();
+    };
+
     return (
         <>
             <Table<Coin>
@@ -159,12 +164,14 @@ export const CoinsTable = () => {
                     )}
                 />
             </Table>
-            <BuyModal
-                open={isModalOpen}
-                onOk={handleOk}
-                onCancel={handleCancel}
-                choosenCurrency={choosenCurrency}
-            />
+            {choosenCurrency && (
+                <BuyModal
+                    open={isModalOpen}
+                    onOk={handleOk}
+                    onCancel={onCancel}
+                    price={choosenCurrency.priceUsd}
+                />
+            )}
         </>
     );
 };

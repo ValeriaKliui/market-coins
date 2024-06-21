@@ -1,4 +1,4 @@
-import { formatMoneyStr } from '@utils/formatMoneyStr';
+import { formatNumberStr } from '@utils/formatNumberStr';
 import { getImageUrlBySymbol } from '@utils/getImageUrlBySymbol';
 import { Avatar, Card, Flex } from 'antd';
 import Meta from 'antd/es/card/Meta';
@@ -15,7 +15,7 @@ export const CoinCard: FC<CoinCardProps> = ({
     priceUsd,
     bottom,
 }) => {
-    const formattedPriceUsd = formatMoneyStr(priceUsd, 'USD');
+    const formattedPriceUsd = formatNumberStr(priceUsd, 'USD');
     return (
         <Card
             bordered={false}

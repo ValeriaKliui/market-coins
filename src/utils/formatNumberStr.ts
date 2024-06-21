@@ -1,5 +1,8 @@
-export const formatMoneyStr = (money?: string | null, currency?: string) => {
-    const moneyNum = Number(money);
+export const formatNumberStr = (
+    number?: string | null | number,
+    currency?: string
+) => {
+    const moneyNum = Number(number);
 
     const formatterNum = new Intl.NumberFormat('ru', {
         maximumFractionDigits: 2,

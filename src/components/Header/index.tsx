@@ -1,5 +1,5 @@
 import { useGetCoinsMarketQuery } from '@store/services/coinsApi';
-import { formatMoneyStr } from '@utils/formatMoneyStr';
+import { formatNumberStr } from '@utils/formatNumberStr';
 import { Descriptions, Flex, Image } from 'antd';
 import DescriptionsItem from 'antd/es/descriptions/Item';
 import Text from 'antd/es/typography/Text';
@@ -16,7 +16,7 @@ export const Header = () => {
                         <Flex gap="small">
                             <Text strong>{symbol}: </Text>
                             <Text type="success" strong>
-                                {formatMoneyStr(priceUsd, 'USD')}
+                                {formatNumberStr(priceUsd, 'USD')}
                             </Text>
                         </Flex>
                     </DescriptionsItem>
